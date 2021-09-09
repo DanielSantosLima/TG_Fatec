@@ -2,10 +2,5 @@
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
-  "/": "pages/index.js",
-  "/authentication": "pages/authentication.js",
-  "/recuperation": "pages/recuperation.js",
-  "/registrationOptions": "pages/registrationOptions.js",
-  "/registration": "pages/registration.js",
   "/registrationsReceive": "pages/registrationsReceive.js"
 }

@@ -1,10 +1,8 @@
 // eslint-disable-next-line no-use-before-define
-import React, { FC, ReactNode } from "react"
+import React, { FC, ReactNode, useState } from "react"
 import { Container } from "../styles/pages/Home"
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
-
 import CloseIcon from "@material-ui/icons/Close"
-
 import {
   Fields2,
   Fields3,
@@ -16,6 +14,7 @@ import {
   ViewLoginFrame,
   Close
 } from "../styles/pages/RegistrationsReceive"
+import axios from 'axios'
 
 interface RegistrationReceiveProps {
   children?: ReactNode
@@ -32,6 +31,58 @@ const RegistrationReceive: FC<RegistrationReceiveProps> = () => {
       }
     })
   )
+
+  const [nomeDonatario, setNomeDonatario] = useState("")
+  const [telefone, setTelefone] = useState("")
+  const [celular, setCelular] = useState("")
+  const [descricao, setDescricao] = useState("")
+
+  const getNomeDonatario = e => {
+    setNomeDonatario(e.target.value)
+  }
+
+  const getTelefone = e => {
+    setTelefone(e.target.value)
+  }
+
+  const getCelular = e => {
+    setCelular(e.target.value)
+  }
+
+  const getDescricao = e => {
+    setDescricao(e.target.value)
+  }
+
+  type donationRequest = {
+    nome: string,
+    telefone: string,
+    celular: string,
+    descricao: string,
+    ativo: boolean
+  }
+
+  const donationRequestToCreate: donationRequest = {
+    nome: nomeDonatario,
+    telefone: telefone,
+    celular: celular,
+    descricao: descricao,
+    ativo: true
+  }
+
+  const donationRequestToApi = async () => {
+    const response = await axios.post('/api/donation/orderVerification', { donationRequestToCreate })
+    if (response.data.length > 0) {
+      console.log(response);
+
+      console.log("Pedido já registrado no seu nome. Entraremos em contato em breve.")
+    } else {
+        const registrationResponse = await axios.post('/api/donation/orderRegistration', { donationRequestToCreate })
+        if (registrationResponse.data.length > 0) {
+          return console.log("Pedido criado com sucesso!")
+        }
+      
+    }
+  }
 
   return (
     <>
@@ -53,7 +104,9 @@ const RegistrationReceive: FC<RegistrationReceiveProps> = () => {
                   type="usename"
                   placeholder="Nome Completo"
                   // value={user}
-                  // onChange={setUserContent}
+                  onChange={e => {
+                    getNomeDonatario(e)
+                  }}
                 />
               </Name>
             </Fields2>
@@ -63,7 +116,7 @@ const RegistrationReceive: FC<RegistrationReceiveProps> = () => {
                   type="usename"
                   placeholder="Telefone"
                   // value={user}
-                  // onChange={setUserContent}
+                  onChange={e => { getTelefone(e) }}
                 />
               </Name>
             </Fields2>
@@ -73,18 +126,17 @@ const RegistrationReceive: FC<RegistrationReceiveProps> = () => {
                   type="usename"
                   placeholder="Celular"
                   // value={user}
-                  // onChange={setUserContent}
+                  onChange={e => { getCelular(e) }}
                 />
               </Name>
             </Fields2>
             <ForgotLink>Fale um pouco sobre você:</ForgotLink>
             <Fields3>
               <Name>
-                <textarea />
+                <textarea onChange={e => { getDescricao(e) }} />
               </Name>
             </Fields3>
-
-            <SigninButton>Cadastre-se</SigninButton>
+            <SigninButton onClick={donationRequestToApi}>Cadastre-se</SigninButton>
           </LoginFrame>
         </ViewLoginFrame>
       </Container>
