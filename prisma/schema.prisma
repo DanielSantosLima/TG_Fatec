@@ -20,8 +20,8 @@ model tipo_usuario {
 model PedidosDoacaoEmAberto {
   id        Int     @id @default(autoincrement())
   nome      String  @db.VarChar(200)
-  telefone  String  @db.VarChar(30)
-  celular   String  @db.VarChar(30)
-  descricao String? @db.VarChar(300)
+  telefone  String?  @db.VarChar(30)
+  celular   String?  @db.VarChar(30)
+  descricao String @db.VarChar(300)
   ativo     Boolean
 }

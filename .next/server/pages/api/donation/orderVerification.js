@@ -4,6 +4,22 @@ exports.id = "pages/api/donation/orderVerification";
 exports.ids = ["pages/api/donation/orderVerification"];
 exports.modules = {
 
+/***/ "./prismaClientConfig.js":
+/*!*******************************!*\
+  !*** ./prismaClientConfig.js ***!
+  \*******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _prisma_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @prisma/client */ "@prisma/client");
+/* harmony import */ var _prisma_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_prisma_client__WEBPACK_IMPORTED_MODULE_0__);
+
+const defaultPrisma = new _prisma_client__WEBPACK_IMPORTED_MODULE_0__.PrismaClient();
+/* harmony default export */ __webpack_exports__["default"] = (defaultPrisma);
+
+/***/ }),
+
 /***/ "./src/pages/api/donation/orderVerification.ts":
 /*!*****************************************************!*\
   !*** ./src/pages/api/donation/orderVerification.ts ***!
@@ -12,16 +28,13 @@ exports.modules = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _prisma_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @prisma/client */ "@prisma/client");
-/* harmony import */ var _prisma_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_prisma_client__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _prismaClientConfig__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../prismaClientConfig */ "./prismaClientConfig.js");
 
-const prisma = new _prisma_client__WEBPACK_IMPORTED_MODULE_0__.PrismaClient();
 
 const orderVerification = async (req, res) => {
   const {
     body
   } = req;
-  console.log(body);
   const {
     nome,
     telefone,
@@ -29,22 +42,15 @@ const orderVerification = async (req, res) => {
   } = body.donationRequestToCreate;
 
   try {
-    const dbReturn = await prisma.pedidosDoacaoEmAberto.findMany({
-      where: {
-        OR: [{
-          nome: nome,
-          telefone: telefone
-        }, {
-          nome: nome,
-          celular: celular
-        }]
-      }
-    });
+    const dbReturn = await _prismaClientConfig__WEBPACK_IMPORTED_MODULE_0__.default.$queryRaw(`select * from public."PedidosDoacaoEmAberto" pdea 
+        where (nome = '${nome}' and telefone = '${telefone}') 
+      or 
+        (nome = '${nome}' and celular = '${celular}')`);
     return res.send(dbReturn);
   } catch (error) {
     throw error;
   } finally {
-    await prisma.$disconnect();
+    await _prismaClientConfig__WEBPACK_IMPORTED_MODULE_0__.default.$disconnect();
   }
 };
 
@@ -74,4 +80,4 @@ var __webpack_exports__ = (__webpack_exec__("./src/pages/api/donation/orderVerif
 module.exports = __webpack_exports__;
 
 })();
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9xdWVzdC1oZWxwZXIvLi9zcmMvcGFnZXMvYXBpL2RvbmF0aW9uL29yZGVyVmVyaWZpY2F0aW9uLnRzIiwid2VicGFjazovL3F1ZXN0LWhlbHBlci9leHRlcm5hbCBcIkBwcmlzbWEvY2xpZW50XCIiXSwibmFtZXMiOlsicHJpc21hIiwiUHJpc21hQ2xpZW50Iiwib3JkZXJWZXJpZmljYXRpb24iLCJyZXEiLCJyZXMiLCJib2R5IiwiY29uc29sZSIsImxvZyIsIm5vbWUiLCJ0ZWxlZm9uZSIsImNlbHVsYXIiLCJkb25hdGlvblJlcXVlc3RUb0NyZWF0ZSIsImRiUmV0dXJuIiwicGVkaWRvc0RvYWNhb0VtQWJlcnRvIiwiZmluZE1hbnkiLCJ3aGVyZSIsIk9SIiwic2VuZCIsImVycm9yIiwiJGRpc2Nvbm5lY3QiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7QUFBQTtBQUdBLE1BQU1BLE1BQU0sR0FBRyxJQUFJQyx3REFBSixFQUFmOztBQUVBLE1BQU9DLGlCQUFpQixHQUFHLE9BQVFDLEdBQVIsRUFBNEJDLEdBQTVCLEtBQW9EO0FBQzdFLFFBQU07QUFBRUM7QUFBRixNQUFXRixHQUFqQjtBQUNBRyxTQUFPLENBQUNDLEdBQVIsQ0FBWUYsSUFBWjtBQUVBLFFBQU07QUFBRUcsUUFBRjtBQUFRQyxZQUFSO0FBQWtCQztBQUFsQixNQUE4QkwsSUFBSSxDQUFDTSx1QkFBekM7O0FBQ0EsTUFBSTtBQUNGLFVBQU1DLFFBQVEsR0FBRyxNQUFNWixNQUFNLENBQUNhLHFCQUFQLENBQTZCQyxRQUE3QixDQUFzQztBQUMzREMsV0FBSyxFQUFFO0FBQ0xDLFVBQUUsRUFBQyxDQUNEO0FBQ0VSLGNBQUksRUFBRUEsSUFEUjtBQUVFQyxrQkFBUSxFQUFFQTtBQUZaLFNBREMsRUFLRDtBQUNFRCxjQUFJLEVBQUVBLElBRFI7QUFFRUUsaUJBQU8sRUFBRUE7QUFGWCxTQUxDO0FBREU7QUFEb0QsS0FBdEMsQ0FBdkI7QUFjQSxXQUFPTixHQUFHLENBQUNhLElBQUosQ0FBU0wsUUFBVCxDQUFQO0FBQ0QsR0FoQkQsQ0FnQkUsT0FBT00sS0FBUCxFQUFjO0FBQ2QsVUFBTUEsS0FBTjtBQUNELEdBbEJELFNBa0JTO0FBQ1AsVUFBTWxCLE1BQU0sQ0FBQ21CLFdBQVAsRUFBTjtBQUNEO0FBRUYsQ0EzQkQ7O0FBNkJBLCtEQUFlakIsaUJBQWYsRTs7Ozs7Ozs7Ozs7QUNsQ0EsNEMiLCJmaWxlIjoicGFnZXMvYXBpL2RvbmF0aW9uL29yZGVyVmVyaWZpY2F0aW9uLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgUHJpc21hLCBQcmlzbWFDbGllbnQgfSBmcm9tICdAcHJpc21hL2NsaWVudCdcbmltcG9ydCB7IE5leHRBcGlSZXF1ZXN0LCBOZXh0QXBpUmVzcG9uc2UgfSBmcm9tICduZXh0J1xuXG5jb25zdCBwcmlzbWEgPSBuZXcgUHJpc21hQ2xpZW50KClcblxuY29uc3QgIG9yZGVyVmVyaWZpY2F0aW9uID0gYXN5bmMgKCByZXE6TmV4dEFwaVJlcXVlc3QsIHJlczpOZXh0QXBpUmVzcG9uc2UpID0+IHtcbiAgY29uc3QgeyBib2R5IH0gPSByZXFcbiAgY29uc29sZS5sb2coYm9keSk7XG4gIFxuICBjb25zdCB7IG5vbWUsIHRlbGVmb25lLCBjZWx1bGFyIH0gPSBib2R5LmRvbmF0aW9uUmVxdWVzdFRvQ3JlYXRlXG4gIHRyeSB7XG4gICAgY29uc3QgZGJSZXR1cm4gPSBhd2FpdCBwcmlzbWEucGVkaWRvc0RvYWNhb0VtQWJlcnRvLmZpbmRNYW55KHtcbiAgICAgIHdoZXJlOiB7XG4gICAgICAgIE9SOltcbiAgICAgICAgICB7XG4gICAgICAgICAgICBub21lOiBub21lLFxuICAgICAgICAgICAgdGVsZWZvbmU6IHRlbGVmb25lXG4gICAgICAgICAgfSxcbiAgICAgICAgICB7XG4gICAgICAgICAgICBub21lOiBub21lLFxuICAgICAgICAgICAgY2VsdWxhcjogY2VsdWxhclxuICAgICAgICAgIH1cbiAgICAgICAgXVxuICAgICAgfVxuICAgIH0pXG4gICAgcmV0dXJuIHJlcy5zZW5kKGRiUmV0dXJuKVxuICB9IGNhdGNoIChlcnJvcikge1xuICAgIHRocm93IGVycm9yXG4gIH1maW5hbGx5IHtcbiAgICBhd2FpdCBwcmlzbWEuJGRpc2Nvbm5lY3QoKVxuICB9XG4gIFxufVxuXG5leHBvcnQgZGVmYXVsdCBvcmRlclZlcmlmaWNhdGlvbiIsIm1vZHVsZS5leHBvcnRzID0gcmVxdWlyZShcIkBwcmlzbWEvY2xpZW50XCIpOzsiXSwic291cmNlUm9vdCI6IiJ9
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9xdWVzdC1oZWxwZXIvLi9wcmlzbWFDbGllbnRDb25maWcuanMiLCJ3ZWJwYWNrOi8vcXVlc3QtaGVscGVyLy4vc3JjL3BhZ2VzL2FwaS9kb25hdGlvbi9vcmRlclZlcmlmaWNhdGlvbi50cyIsIndlYnBhY2s6Ly9xdWVzdC1oZWxwZXIvZXh0ZXJuYWwgXCJAcHJpc21hL2NsaWVudFwiIl0sIm5hbWVzIjpbImRlZmF1bHRQcmlzbWEiLCJQcmlzbWFDbGllbnQiLCJvcmRlclZlcmlmaWNhdGlvbiIsInJlcSIsInJlcyIsImJvZHkiLCJub21lIiwidGVsZWZvbmUiLCJjZWx1bGFyIiwiZG9uYXRpb25SZXF1ZXN0VG9DcmVhdGUiLCJkYlJldHVybiIsInNlbmQiLCJlcnJvciJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7OztBQUFBO0FBRUMsTUFBTUEsYUFBYSxHQUFHLElBQUlDLHdEQUFKLEVBQXRCO0FBRUEsK0RBQWVELGFBQWYsRTs7Ozs7Ozs7Ozs7OztBQ0pEOztBQUdBLE1BQU9FLGlCQUFpQixHQUFHLE9BQVFDLEdBQVIsRUFBNEJDLEdBQTVCLEtBQW9EO0FBQzdFLFFBQU07QUFBRUM7QUFBRixNQUFXRixHQUFqQjtBQUVBLFFBQU07QUFBRUcsUUFBRjtBQUFRQyxZQUFSO0FBQWtCQztBQUFsQixNQUE4QkgsSUFBSSxDQUFDSSx1QkFBekM7O0FBQ0EsTUFBSTtBQUNGLFVBQU1DLFFBQVEsR0FBRyxNQUFNVixrRUFBQSxDQUNwQjtBQUNQLHlCQUF5Qk0sSUFBSyxxQkFBb0JDLFFBQVM7QUFDM0Q7QUFDQSxtQkFBbUJELElBQUssb0JBQW1CRSxPQUFRLElBSnhCLENBQXZCO0FBTUEsV0FBT0osR0FBRyxDQUFDTyxJQUFKLENBQVNELFFBQVQsQ0FBUDtBQUNELEdBUkQsQ0FRRSxPQUFPRSxLQUFQLEVBQWM7QUFDZCxVQUFNQSxLQUFOO0FBQ0QsR0FWRCxTQVVTO0FBQ1AsVUFBTVosb0VBQUEsRUFBTjtBQUNEO0FBQ0YsQ0FqQkQ7O0FBbUJBLCtEQUFlRSxpQkFBZixFOzs7Ozs7Ozs7OztBQ3RCQSw0QyIsImZpbGUiOiJwYWdlcy9hcGkvZG9uYXRpb24vb3JkZXJWZXJpZmljYXRpb24uanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBQcmlzbWFDbGllbnR9IGZyb20gJ0BwcmlzbWEvY2xpZW50J1xyXG5cclxuIGNvbnN0IGRlZmF1bHRQcmlzbWEgPSBuZXcgUHJpc21hQ2xpZW50KCk7XHJcblxyXG4gZXhwb3J0IGRlZmF1bHQgZGVmYXVsdFByaXNtYTsiLCJpbXBvcnQgZGVmYXVsdFByaXNtYSBmcm9tICcuLi8uLi8uLi8uLi9wcmlzbWFDbGllbnRDb25maWcnO1xuaW1wb3J0IHsgTmV4dEFwaVJlcXVlc3QsIE5leHRBcGlSZXNwb25zZSB9IGZyb20gJ25leHQnXG5cbmNvbnN0ICBvcmRlclZlcmlmaWNhdGlvbiA9IGFzeW5jICggcmVxOk5leHRBcGlSZXF1ZXN0LCByZXM6TmV4dEFwaVJlc3BvbnNlKSA9PiB7XG4gIGNvbnN0IHsgYm9keSB9ID0gcmVxXG4gIFxuICBjb25zdCB7IG5vbWUsIHRlbGVmb25lLCBjZWx1bGFyIH0gPSBib2R5LmRvbmF0aW9uUmVxdWVzdFRvQ3JlYXRlXG4gIHRyeSB7XG4gICAgY29uc3QgZGJSZXR1cm4gPSBhd2FpdCBkZWZhdWx0UHJpc21hLiRxdWVyeVJhdyhcbiAgICAgIGBzZWxlY3QgKiBmcm9tIHB1YmxpYy5cIlBlZGlkb3NEb2FjYW9FbUFiZXJ0b1wiIHBkZWEgXG4gICAgICAgIHdoZXJlIChub21lID0gJyR7bm9tZX0nIGFuZCB0ZWxlZm9uZSA9ICcke3RlbGVmb25lfScpIFxuICAgICAgb3IgXG4gICAgICAgIChub21lID0gJyR7bm9tZX0nIGFuZCBjZWx1bGFyID0gJyR7Y2VsdWxhcn0nKWBcbiAgICAgIClcbiAgICByZXR1cm4gcmVzLnNlbmQoZGJSZXR1cm4pXG4gIH0gY2F0Y2ggKGVycm9yKSB7XG4gICAgdGhyb3cgZXJyb3JcbiAgfWZpbmFsbHkge1xuICAgIGF3YWl0IGRlZmF1bHRQcmlzbWEuJGRpc2Nvbm5lY3QoKVxuICB9XG59XG5cbmV4cG9ydCBkZWZhdWx0IG9yZGVyVmVyaWZpY2F0aW9uXG5cbiIsIm1vZHVsZS5leHBvcnRzID0gcmVxdWlyZShcIkBwcmlzbWEvY2xpZW50XCIpOzsiXSwic291cmNlUm9vdCI6IiJ9

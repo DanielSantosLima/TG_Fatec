@@ -72,15 +72,16 @@ const RegistrationReceive: FC<RegistrationReceiveProps> = () => {
   const donationRequestToApi = async () => {
     const response = await axios.post('/api/donation/orderVerification', { donationRequestToCreate })
     if (response.data.length > 0) {
-      console.log(response);
 
-      console.log("Pedido já registrado no seu nome. Entraremos em contato em breve.")
+      console.log("Já existe um pedido registrado com seu nome e telefone. A Olhos do Bem irá entrar em contato com você em breve.")
     } else {
         const registrationResponse = await axios.post('/api/donation/orderRegistration', { donationRequestToCreate })
-        if (registrationResponse.data.length > 0) {
-          return console.log("Pedido criado com sucesso!")
+        
+        if (registrationResponse.data.success) {
+         console.log(registrationResponse.data.message)//Criar modal com mensagem de sucesso
+        }else {
+          console.log(registrationResponse.data.message);//Criar modal com mensagem de erro.
         }
-      
     }
   }
 
