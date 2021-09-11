@@ -1,5 +1,8 @@
 // eslint-disable-next-line no-use-before-define
 import React, { FC, ReactNode, useState } from "react"
+import { createBrowserHistory } from 'history';
+let history = createBrowserHistory();
+import axios from 'axios'
 import { LockIcon, MailIcon } from "../styles/icons"
 import Link from "next/link"
 import {
@@ -19,15 +22,30 @@ interface AuthenticationProps {
 }
 
 const Authentication: FC<AuthenticationProps> = () => {
-  const [user, setUser] = useState("")
+  const [userName, setUserName] = useState("")
   const [password, setPassword] = useState("")
+  
 
   const setUserContent = e => {
-    setUser(e.target.value)
+    setUserName(e.target.value)
   }
 
   const setPasswrodContent = e => {
     setPassword(e.target.value)
+  }
+
+  type defaultUser = {
+    name: string,
+    password: string
+  }
+
+  let userToVerify: defaultUser = {
+    name: userName,
+    password: password
+  }
+
+  const verifyUser = async () => {
+    const userResponse = await axios.post('http://localhost:3000/api/user/verifyUser', {userToVerify})
   }
 
   return (
@@ -48,7 +66,7 @@ const Authentication: FC<AuthenticationProps> = () => {
             <input
               type="usename"
               placeholder="usuário"
-              value={user}
+              value={userName}
               onChange={setUserContent}
             />
           </Username>
@@ -64,7 +82,7 @@ const Authentication: FC<AuthenticationProps> = () => {
           </Password>
         </Fields>
 
-        <SigninButton>Login</SigninButton>
+        <SigninButton onClick={verifyUser}>Login</SigninButton>
 
         <ForgotLink>
           <a href="/recuperation"> Esqueci minha senha</a>

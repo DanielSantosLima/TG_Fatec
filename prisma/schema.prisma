@@ -7,21 +7,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model tipo_telefone {
-  id   Int    @id @default(autoincrement())
-  nome String @db.VarChar(100)
+model Tipo_Telefone {
+  id      Int       @id @default(autoincrement())
+  nome    String    @db.VarChar(100)
+  Usuario Usuario[]
+
+  @@map("tipo_telefone")
 }
 
-model tipo_usuario {
-  id   BigInt @id @default(autoincrement())
-  nome String @db.VarChar(100)
+model Tipo_usuario {
+  id      BigInt    @id @default(autoincrement())
+  nome    String    @db.VarChar(100)
+  Usuario Usuario[]
+
+  @@map("tipo_usuario")
 }
 
 model PedidosDoacaoEmAberto {
   id        Int     @id @default(autoincrement())
   nome      String  @db.VarChar(200)
-  telefone  String?  @db.VarChar(30)
-  celular   String?  @db.VarChar(30)
-  descricao String @db.VarChar(300)
+  telefone  String? @db.VarChar(30)
+  celular   String? @db.VarChar(30)
+  descricao String  @db.VarChar(300)
   ativo     Boolean
+
+  @@map("pedidosDoacaoEmAberto")
+}
+
+model Usuario {
+  id             Int           @id @default(autoincrement())
+  tipoUsuarioId  BigInt
+  nome           String        @db.VarChar(500)
+  email          String        @db.VarChar(500)
+  endereco       String?       @db.VarChar(500)
+  numero_imovel  Int?
+  complemento    String?       @db.VarChar(100)
+  bairro         String?       @db.VarChar(200)
+  cep            String?       @db.VarChar(20)
+  cidade         String?       @db.VarChar(200)
+  estado         String?       @db.VarChar(2)
+  cpf            String        @db.VarChar(30)
+  telefone       String        @db.VarChar(11)
+  tipoTelefoneId Int
+  Tipo_Telefone  Tipo_Telefone @relation(fields: [tipoTelefoneId], references: [id])
+  Tipo_usuario   Tipo_usuario  @relation(fields: [tipoUsuarioId], references: [id])
+
+  @@map("usuario")
+}
+
+model Estados {
+  id    Int    @id @default(autoincrement())
+  nome  String @db.VarChar(100)
+  sigla String @db.VarChar(2)
+
+  @@map("estados")
 }
